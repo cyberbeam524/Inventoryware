@@ -13,8 +13,14 @@
 
 ## Running locally
 
+#### Install dependencies
+- mongocxx (guide for installing: https://mongocxx.org/mongocxx-v3/installation/)
+- bsoncxx
+
 #### Start Console Program
-To start the program, open terminal and run 
+Create a folder called "output" with 
+``` mkdir output ``` 
+To compile the c++ program and start it, open terminal and run 
 ``` make mango ``` 
 or 
 ```
