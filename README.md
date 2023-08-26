@@ -49,7 +49,8 @@ Type option 2 to view items current items in inventory as shown above.
 
 ## To Dos:
 - [x] Basic CRUD Operations
-- [ ] Inventory Items abstraction for better comparison between items
+- [x] Inventory as a Business Layer
+- [ ] Items abstraction for better comparison between items
 - [ ] Sorting inventory items
     - [ ] by expiry date
         - [ ] option to remove items with expiry date more than today
