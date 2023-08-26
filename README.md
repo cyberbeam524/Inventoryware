@@ -14,27 +14,27 @@ g++ --std=c++11 -o ./output/mongo mongo.cpp -I/usr/local/include/mongocxx/v_noab
 	./output/mongo
 ```
 
-<img src="./images/startprogram.png" style="width:100%">
+<img src="./images/startprogram.png" style="width:75%">
 
 
 ### Add Item to Inventory:
 Type option 1 to add items. Users will be prompted for the name, quantity, and expiration date of the items to be added.
 
-<img src="./images/additem.png" style="width:100%">
+<img src="./images/additem.png" style="width:75%">
 
 ### Remove Item from Inventory:
 Type option 3 to add items. Users will be prompted for the name of the item to be removed.
 
-<img src="./images/removeitem.png" style="width:100%">
+<img src="./images/removeitem.png" style="width:75%">
 
 ### View Items in Inventory:
 Type option 2 to view items current items in inventory as shown above.
 
-<img src="./images/removeitem.png" style="width:100%">
+<img src="./images/removeitem.png" style="width:75%">
 
 Inventory Layered Architecture:
 
-<img src="./images/architecture_layers.png" style="width:100%">
+<img src="./images/architecture_layers.png" style="width:50%">
 
 ## To Dos:
 - [x] Basic CRUD Operations
