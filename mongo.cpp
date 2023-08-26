@@ -38,7 +38,10 @@ class Inventory {
     };
 
     ~Inventory(){ 
-        cout << "Closing program";
+        // delete *this->collection;
+        // delete *this->db;
+        // delete *this->client;
+        cout << " ----------------- Thank you for using the Inventory ----------------- \n~Closing program~\n";
     }
 
     void insert_inventory(string name, string expiryName, int quantity) {
@@ -151,6 +154,8 @@ int main()
         }
     }
     }
+
+    // delete *inventory;
     return 0;
 }
 
