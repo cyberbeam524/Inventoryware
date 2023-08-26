@@ -26,19 +26,21 @@ class Inventory {
     int speed(int maxSpeed);
     mongocxx::database db;
     mongocxx::collection collection;
-    mongocxx::uri uri;
-    mongocxx::instance instance{};
     mongocxx::client client;
+
     Inventory(string dbName, string tableName) {
+        mongocxx::instance instance{};
         mongocxx::uri uri("mongodb://localhost:27017");
         mongocxx::client client(uri);
-        this->uri = std::move(uri);
         this->client = std::move(client);
         this->db = this->client[dbName];
-        cout << "created db: ";
         this->collection = this->db[tableName];
-
     };
+
+    ~Inventory(){ 
+        cout << "Closing program";
+    }
+
     void insert_inventory(string name, string expiryName, int quantity) {
         auto insert_one_result = this->collection.insert_one(
             make_document(kvp("Item Name", name),
@@ -73,7 +75,6 @@ class Inventory {
     }
 };
 
-
 void writeEntry(){
     char data [ 15 ] ;  
     ofstream outfile ;  
@@ -87,6 +88,7 @@ void writeEntry(){
         len = len + 1 ;  
     }
 }
+
 int main()
 {
     string dbName = "mydb"; string tableName = "inventory"; int option = 0;
@@ -96,9 +98,9 @@ int main()
     while (option != 6 ) {  
     // This prints out all the available options in the DB
     cout << " \n Available operations: \n1. Add New "  
-            "Inventory Item \n2 . "  
-        << "Display All Inventory Records \n3 . Delete Inventory Item"
-        << "\n6 . Exit"
+            "Inventory Item \n2. "  
+        << "Display All Inventory Records \n3. Delete Inventory Item"
+        << "\n6. Exit"
         << "\nEnter option: " ;  
     cin >> option ;  
 
