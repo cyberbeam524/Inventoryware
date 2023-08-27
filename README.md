@@ -45,8 +45,6 @@ Type option 3 to add items. Users will be prompted for the name of the item to b
 #### View Items
 Type option 2 to view items current items in inventory as shown above.
 
-<img src="./images/removeitem.png" style="width:50%">
-
 ## To Dos:
 - [x] Basic CRUD Operations
 - [x] Inventory as a Business Layer
