@@ -92,11 +92,46 @@ void writeEntry(){
     }
 }
 
+
+// todo: for massive insertion and deletion of documents 
+// - use shared ptr from boost to custompool !!
+class CustomPool{
+    public:
+    vector<mongocxx::client> connectionsPool{};
+    CustomPool(int connections){
+        mongocxx::uri uri("mongodb://localhost:27017");
+        for (int i = 0; i < connections; i++){
+            mongocxx::client client(uri);
+            this->connectionsPool.push_back(std::move(client));
+            // cout << "the pool is this big: " << connectionsPool.size() << "\n";
+            }
+    };
+
+    ~CustomPool(){
+        for (int i = 0; i < connectionsPool.size(); i++){
+            connectionsPool.pop_back();
+        }
+        // cout << "\nClosed database connection pool " << connectionsPool.size()<< "\n";
+        // delete connectionsPool;
+    }
+    
+    // todo: templating for 2 different return types since mongocxx::client cannot be nullptr
+    // mongocxx::client acquireClient(){
+    //     if (connectionsPool.size() > 0){
+    //         return connectionsPool.pop_back();
+    //     }
+    //     return nullptr;
+    // }
+};
+
+
 int main()
 {
     string dbName = "mydb"; string tableName = "inventory"; int option = 0;
     // Inventory object to handle application layer operations
     Inventory inventory(dbName, tableName);
+
+    CustomPool dbPool(4);
     
     while (option != 6 ) {  
     // This prints out all the available options in the DB
@@ -148,9 +183,14 @@ int main()
             inventory.delete_single_item(itemName);
         }
     }else if(option == 4){
+        // CustomPool dbPool(4);
         // // todo:add list to text document for users to print
         {
             // // writeEntry();
+
+            
+
+
         }
     }
     }
