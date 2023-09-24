@@ -1,6 +1,6 @@
 # Inventoryware
 
-## Console Program Demo
+## Section 1: User's Console Program
 <img src="./images/console_example.gif" style="width:100%">
 
 ## Tech Stack
@@ -10,7 +10,6 @@
 ## Inventory's Layered Architecture
 <img src="./images/architecture_layers.png" style="width:50%">
 
-
 ## Running locally
 
 #### Install dependencies
@@ -18,9 +17,9 @@
 - bsoncxx
 
 #### Start Console Program
-Create a folder called "output" with 
+1. Create a folder called "output" with 
 ``` mkdir output ``` 
-To compile the c++ program and start it, open terminal and run 
+2. To compile the c++ program and start it, open terminal and run 
 ``` make mango ``` 
 or 
 ```
@@ -31,34 +30,26 @@ g++ --std=c++11 -o ./output/mongo mongo.cpp -I/usr/local/include/mongocxx/v_noab
 ```
 <img src="./images/startprogram.png" style="width:50%">
 
-#### Add Item
+3. Add Item
 Type option 1 to add items. Users will be prompted for the name, quantity, and expiration date of the items to be added.
 
 <img src="./images/additem.png" style="width:50%">
 
-#### Remove Item
+4. Remove Item
 Type option 3 to add items. Users will be prompted for the name of the item to be removed.
 
 <img src="./images/removeitem.png" style="width:50%">
 
-#### View Items
+5. View Items
 Type option 2 to view items current items in inventory as shown above.
 
-## To Dos:
-- [x] Basic CRUD Operations
-- [x] Inventory as a Business Layer
-- [ ] Items abstraction for better comparison between items
-- [ ] Sorting inventory items
-    - [ ] by expiry date
-        - [ ] option to remove items with expiry date more than today
-    - [ ] other columns 
 
+## Section 2: Concurrency Operations
 
-Section 2: Concurrency Operations 
-    
+### Mulithreaded App Architecture 
 <img src="./images/workerpool_diagram.png" style="width:50%">
 
-Design Considerations:
+### Design Considerations:
 - To relieve hotspots in the program when multiple edits need to be made such as adding, deleting, editting 100 or more documents at once, concurrency can be used. 
 - Concurrent operations require creating new threads. These threads are joined and deleted when the result of the task is fetched. Creating and closing threads can be a resource intensive process. Thus, having reusable threads that can be fetched from pools can be used. 
 - A worker threadpool and a database connections threadpool are used to synchronise with each other and execute multiple transactions in database. 
@@ -73,15 +64,25 @@ Design Considerations:
 
 ## Running locally
 
-Create a folder called "output" with 
+1. Create a folder called "output" with 
 ``` mkdir output ``` 
 
-To start the postgresql database, run 
+2. To start the postgresql database, run 
 ``` docker compose up ``` 
 
-To compile the c++ program and start it, open terminal and run 
+3. To compile the c++ program and start it, open terminal and run 
 ``` make postgres_threadpool``` 
 
+
+## To Dos:
+- [x] Basic CRUD Operations
+- [x] Inventory as a Business Layer
+- [ ] Items abstraction for better comparison between items
+- [ ] Sorting inventory items
+    - [ ] by expiry date
+        - [ ] option to remove items with expiry date more than today
+    - [ ] other columns 
+- [ ] Add CPU performance profiler and race condition detector(race_detector) for better analysis
 
 References:
 - https://github.com/mongodb/mongo-cxx-driver
