@@ -48,7 +48,7 @@ Type option 3 to add items. Users will be prompted for the name of the item to b
 Type option 2 to view items current items in inventory as shown above.
 
 
-## Section 2: Making it a Mulithreaded App
+## Section 2: Making it a Multithreaded App
 
 ### Mulithreaded App Architecture 
 <img src="./images/workerpool_diagram.png" style="width:50%">
