@@ -8,6 +8,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/pool.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
@@ -27,14 +28,21 @@ class Inventory {
     mongocxx::database db;
     mongocxx::collection collection;
     mongocxx::client client;
+    // mongocxx::pool ownPool;
 
     Inventory(string dbName, string tableName) {
         mongocxx::instance instance{};
         mongocxx::uri uri("mongodb://localhost:27017");
+        // mongocxx::uri uri("mongodb://localhost:27017?minPoolSize=3&maxPoolSize=3");
         mongocxx::client client(uri);
         this->client = std::move(client);
         this->db = this->client[dbName];
         this->collection = this->db[tableName];
+
+        // this->ownPool = pool;
+        // this->ownPool = std::move(newPool);
+        // this->ownPool = std::move(newPool);
+        // std::vector<std::thread> threads{};
     };
 
     ~Inventory(){ 
@@ -92,18 +100,47 @@ void writeEntry(){
     }
 }
 
+class ConnectionContainer{
+    public:
+    int available;
+    // int idx;
+    mongocxx::client cli;
+
+    ConnectionContainer(){
+        mongocxx::uri uri("mongodb://localhost:27017");
+        mongocxx::client client(uri);
+        this->cli = std::move(client);
+        this->available = 0;
+    };
+
+    // ConnectionContainer& ConnectionContainer::operator=(const ConnectionContainer& rhs) {}
+        
+};
+
 
 // todo: for massive insertion and deletion of documents 
 // - use shared ptr from boost to custompool !!
 class CustomPool{
     public:
-    vector<mongocxx::client> connectionsPool{};
+    // vector<mongocxx::client> connectionsPool{};
+    vector<ConnectionContainer> connectionsPool{};
+    vector<int> tracker{};
+    // mutable std::mutex                                               m_connections_mtx;
+    // std::unordered_map< mongocxx::uri*, std::unique_ptr< mongocxx::uri > > m_connections_idle;
+    // std::unordered_map< mongocxx::uri*, std::unique_ptr< mongocxx::uri > > m_connections_busy;
     CustomPool(int connections){
         mongocxx::uri uri("mongodb://localhost:27017");
         for (int i = 0; i < connections; i++){
-            mongocxx::client client(uri);
-            this->connectionsPool.push_back(std::move(client));
+            
+            this->tracker.push_back(0);
+            for (int e = 0; e < tracker.size(); e++){cout << "" << tracker[e] << ",";}
+            // mongocxx::client client(uri);
+            
+            // this->connectionsPool.push_back(std::move(client));
             // cout << "the pool is this big: " << connectionsPool.size() << "\n";
+            ConnectionContainer conn{};
+            // this->connectionsPool.push_back(conn);
+            cout << "the pool is this big: " << connectionsPool.size() << "\n";
             }
     };
 
@@ -111,28 +148,63 @@ class CustomPool{
         for (int i = 0; i < connectionsPool.size(); i++){
             connectionsPool.pop_back();
         }
-        // cout << "\nClosed database connection pool " << connectionsPool.size()<< "\n";
+        cout << "\nClosed database connection pool " << connectionsPool.size()<< "\n";
         // delete connectionsPool;
     }
     
-    // todo: templating for 2 different return types since mongocxx::client cannot be nullptr
-    // mongocxx::client acquireClient(){
-    //     if (connectionsPool.size() > 0){
-    //         return connectionsPool.pop_back();
-    //     }
-    //     return nullptr;
-    // }
+    // // todo: templating for 2 different return types since mongocxx::client cannot be nullptr
+    void acquireClient() {}
 };
+
+void tryCustomPool(){
+    string dbName = "mydb"; string tableName = "inventory"; int option = 0;
+    CustomPool dbPool(4);
+    {
+        // auto conn = dbPool.acquireClient();
+        // auto coll = conn.cli[dbName][tableName];
+
+        // auto cursor_all = coll.find({});
+        //     std::cout << "Collection '" << coll.name()
+        //         << "' contains these documents:" << std::endl;
+        //     for (auto doc : cursor_all) {
+        //         std::cout << bsoncxx::to_json(doc, bsoncxx::ExtendedJsonMode::k_relaxed) << std::endl;
+        //     }
+        //     std::cout << std::endl;
+    }
+        // --------------------v-----
+
+    // int idx2 = dbPool.acquireClient();
+    // auto coll2 = dbPool.connectionsPool[idx2][dbName][tableName];
+
+    // auto cursor_all2 = coll2.find({});
+    //     std::cout << "Collection '" << coll2.name()
+    //         << "' contains these documents:" << std::endl;
+    //     for (auto doc : cursor_all2) {
+    //         std::cout << bsoncxx::to_json(doc, bsoncxx::ExtendedJsonMode::k_relaxed) << std::endl;
+    //     }
+    //     std::cout << std::endl;
+}
+
+
 
 
 int main()
 {
     string dbName = "mydb"; string tableName = "inventory"; int option = 0;
+
+
     // Inventory object to handle application layer operations
     Inventory inventory(dbName, tableName);
-
-    CustomPool dbPool(4);
+    // mongodb://localhost:27017?minPoolSize=3&maxPoolSize=3
+    mongocxx::uri uri("mongodb://localhost:27017");
+    mongocxx::pool ownPool{uri};
     
+
+    // // CustomPool implementation attempt:
+    // // with existing mongodb client
+    // // - not entirely possible due to internal destruction of client when moved aroudnd
+    // tryCustomPool();
+
     while (option != 6 ) {  
     // This prints out all the available options in the DB
     cout << " \n Available operations: \n1. Add New "  
@@ -183,14 +255,13 @@ int main()
             inventory.delete_single_item(itemName);
         }
     }else if(option == 4){
-        // CustomPool dbPool(4);
+        // multithreaded insertion of documents
+        // independent processes as they dont depend on one another - detach to become daemon processes
+        // or have a pool of threads since its expensive 
+        // to create threads so reuse existing threads
         // // todo:add list to text document for users to print
         {
             // // writeEntry();
-
-            
-
-
         }
     }
     }

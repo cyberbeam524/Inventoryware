@@ -1,3 +1,7 @@
 ./mongo-cxx-driver-r3.8.0
 .vscode
 output
+postgres
+archive
+archive2
+build
