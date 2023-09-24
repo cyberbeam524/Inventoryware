@@ -62,6 +62,8 @@ Type option 2 to view items current items in inventory as shown above.
 - Having more worker threads than hardware cores results in each core having 2 or more threads. With each core handling 2 or more threads, it can result in **_context switching_**, another memory intensive process. Thus, to prevent this, an amount equivalent to the number of hardware cores were used.
 - Each worker pool thread only needs one database connection. Thus, an equivalent number of postgresql database connection threads were created in database pool. 
 - Postgresql was used instead of mongodb due to library incompatibility issues that prevents fetching multiple mongodb connections as needed.
+- Smart pointer - unique pointer used to store all postgresql connection objects as only one thread will be accessing it at a time
+- A shared pointer to the pool is shared with all the threads so that they are able to fetch connections from the common pool. 
 
 ## Tech Stack
 - C++ console program (user-interface & backend)

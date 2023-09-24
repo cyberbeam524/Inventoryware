@@ -249,8 +249,8 @@ int main()
 {
     string dbName = "mydb"; string tableName = "inventory"; int option = 0;
     cout << "point 9\n";
-    // unsigned const thread_count=std::thread::hardware_concurrency();
-    unsigned const thread_count=95;
+    unsigned const thread_count=std::thread::hardware_concurrency();
+    // unsigned const thread_count=95;
     cout << "Best number of worker pool threads to prevent context switching: " << thread_count << "\n";
     thread_pool workerpool = thread_pool(thread_count);
 
