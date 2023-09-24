@@ -18,9 +18,13 @@
 
 #### Start Console Program
 1. Create a folder called "output" with 
-``` mkdir output ``` 
+``` 
+mkdir output 
+``` 
 2. To compile the c++ program and start it, open terminal and run 
-``` make mango ``` 
+``` 
+make mango 
+``` 
 or 
 ```
 g++ --std=c++11 -o ./output/mongo mongo.cpp -I/usr/local/include/mongocxx/v_noabi \
@@ -65,13 +69,19 @@ Type option 2 to view items current items in inventory as shown above.
 ## Running locally
 
 1. Create a folder called "output" with 
-``` mkdir output ``` 
+```
+mkdir output
+``` 
 
 2. To start the postgresql database, run 
-``` docker compose up ``` 
+```
+docker compose up
+``` 
 
 3. To compile the c++ program and start it, open terminal and run 
-``` make postgres_threadpool``` 
+```
+make postgres_threadpool
+``` 
 
 
 ## To Dos:
