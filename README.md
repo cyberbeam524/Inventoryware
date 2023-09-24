@@ -55,11 +55,11 @@ Type option 2 to view items current items in inventory as shown above.
 
 ### Design Considerations:
 - To relieve hotspots in the program when multiple edit requests are made such as adding, deleting, editting 100 or more documents at once, concurrency can be used instead of running it sequentially. This reduces time taken overall as well.
-- Concurrent operations require creating new threads to execute parallel operations. Creating and closing threads can be a resource intensive process. Thus, having **reusable threads** that can be fetched from pools can be used. 
+- Concurrent operations require creating new threads to execute parallel operations. Creating and closing threads can be a resource intensive process. Thus, having **_reusable threads_** that can be fetched from pools can be used. 
 - A worker threadpool and a database connections threadpool are used to synchronise with each other and execute multiple transactions in database. 
-- A thread safe queue was used in both thread pools to ensure race conditions of tasks are avoided. The **thread safe queue** was created using **mutex** to prevent two or more different threads from accessing the same task queue. 
+- A thread safe queue was used in both thread pools to ensure race conditions of tasks are avoided. The **_thread safe queue_** was created using **_mutex_** to prevent two or more different threads from accessing the same task queue. 
     - A possible race condition might be two threads executing the same popped task, resulting in the task getting executed twice such as a bank transaction of deducting $100 from user being done twice. 
-- Having more worker threads than hardware cores results in each core having 2 or more threads. With each core handling 2 or more threads, it can result in **context switching**, another memory intensive process. Thus, to prevent this, an amount equivalent to the number of hardware cores were used.
+- Having more worker threads than hardware cores results in each core having 2 or more threads. With each core handling 2 or more threads, it can result in **_context switching_**, another memory intensive process. Thus, to prevent this, an amount equivalent to the number of hardware cores were used.
 - Each worker pool thread only needs one database connection. Thus, an equivalent number of postgresql database connection threads were created in database pool. 
 - Postgresql was used instead of mongodb due to library incompatibility issues that prevents fetching multiple mongodb connections as needed.
 
