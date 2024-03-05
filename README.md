@@ -23,7 +23,7 @@ mkdir output
 ``` 
 2. To compile the c++ program and start it, open terminal and run 
 ``` 
-make mango 
+make mongo 
 ``` 
 or 
 ```
@@ -62,8 +62,10 @@ Type option 2 to view items current items in inventory as shown above.
 - Having more worker threads than hardware cores results in each core having 2 or more threads. With each core handling 2 or more threads, it can result in **_context switching_**, another memory intensive process. Thus, to prevent this, an amount equivalent to the number of hardware cores were used.
 - Each worker pool thread only needs one database connection. Thus, an equivalent number of postgresql database connection threads were created in database pool. 
 - Postgresql was used instead of mongodb due to library incompatibility issues that prevents fetching multiple mongodb connections as needed.
-- Smart pointer - unique pointer used to store all postgresql connection objects as only one thread will be accessing it at a time
-- A shared pointer to the pool is shared with all the threads so that they are able to fetch connections from the common pool. 
+- Smart pointers used:
+    - unique pointer used to store all postgresql connection objects as only one thread will be accessing it at a time. Only one pointer **_cannot be duplicated_** and the object will be destroyed once the unique pointer goes out of scope (RAI principles apply).  If **_memory leaks_** were to occur from undestoryed postgresql connections stored in raw pointers, it will case the machine to break down in a few months possibly. Using unique pointers prevents memory leaks by safely destroying postgresql connection objects at the end of program.
+    - shared pointer to the pool can be **_duplicated_** and sent to all the threads so that they are able to fetch connections from the common pool. The pool object is destroyed only when the last pointer goes out of scope. As it keeps track of the number of references used, it is **_more memory inefficient_** than unique pointers and its use should be minimised. 
+    - weak pointer of pool's shared pointer created to **_prevent memory leaks_** due to threads not completing in time at end of main scope and thus still holding onto some shared pointer of pool.
 
 ## Tech Stack
 - C++ console program (user-interface & backend)
@@ -110,6 +112,7 @@ References:
 - https://stackoverflow.com/questions/6508037/postgres-connection-pooling-library
 - https://arctype.com/blog/connnection-pooling-postgres/ 
 - https://github.com/joegsn/uvpgpool/blob/master/uvpgpool/UVPGPool.cpp
+- https://www.linkedin.com/pulse/memory-management-using-smart-pointers-c-part-2-pratik-parvati
 
 C++ Methods Specific:
 - https://www.scaler.com/topics/unordered_map-cpp/
